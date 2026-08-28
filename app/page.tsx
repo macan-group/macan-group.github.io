@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 
 // --- TYPES & INTERFACES ---
 type Language = 'en' | 'ar' | 'zh';
@@ -109,8 +109,21 @@ interface ContentDictionary {
     cr: string;
     rights: string;
     domainsTitle: string;
+    contactTitle: string;
+  };
+  contact: {
+    mailtoHint: string;
+    formName: string;
+    formEmail: string;
+    formCompany: string;
+    formMessage: string;
+    sendBtn: string;
+    quoteTitle: string;
+    quoteSub: string;
   };
 }
+
+const CONTACT_EMAIL = "contact@macanco.com";
 
 const DICTIONARY_EN: ContentDictionary = {
   dir: 'ltr',
@@ -204,7 +217,7 @@ const DICTIONARY_EN: ContentDictionary = {
     spotlightProject: 'Duqm Heavy Fabrication & Assembly Hub',
     spotlightSector: 'Steel Fabrication, Modular Processing & Green Hydrogen Machinery',
     spotlightStatus: 'Feasibility Approved • 150,000 Sq. Meters Land Allocated',
-    ctaProspectus: 'Download Investment Prospectus (PDF)',
+    ctaProspectus: 'Request Investment Prospectus',
   },
   industrialPage: {
     heroTitle: 'Turnkey Plant Setup & Engineering',
@@ -221,7 +234,7 @@ const DICTIONARY_EN: ContentDictionary = {
     formProjectLabel: 'Project Type / Sector',
     formLandLabel: 'Required Land Area (m²)',
     formFreezoneLabel: 'Target Oman Free Zone',
-    formUploadBtn: 'Attach CAD Schematics / DWG / PDF',
+    formUploadBtn: 'After your email opens, attach your CAD / DWG / PDF drawings before sending.',
     formSubmitBtn: 'Submit Engineering Consult Request',
   },
   tradePage: {
@@ -232,15 +245,15 @@ const DICTIONARY_EN: ContentDictionary = {
     originsLabel: 'Origin Ports',
     destsLabel: 'Destination Ports',
     modesLabel: 'Transport Modes',
-    calcTitle: 'Instant Ocean Freight Rate Estimator',
+    calcTitle: 'Request an Ocean Freight Quote',
     calcContainerType: 'Cargo / Container Type',
-    calcWeight: 'Total Weight (Metric Tons / TEU)',
-    calcEstimateBtn: 'Calculate Freight Rate',
+    calcWeight: 'Number of Containers / Units',
+    calcEstimateBtn: 'Request Freight Quote',
     calcResultLabel: 'Estimated Freight Cost (CIF Oman)',
   },
   calculator: {
-    title: 'GCC-China Expansion Feasibility Calculator',
-    sub: 'Simulate estimated transit timelines and sovereign tax benefits for your project.',
+    title: 'Corridor Feasibility Enquiry',
+    sub: 'Tell us your project parameters and our advisory desk will send a tailored corridor assessment.',
     typeLabel: 'Select Business Pillar',
     typeOptions: {
       capital: 'FDI & Joint Venture Capital',
@@ -249,7 +262,7 @@ const DICTIONARY_EN: ContentDictionary = {
     },
     locationLabel: 'Target Freezone Hub',
     metricLabel: 'Scale Factor (Project Budget / Container Volume)',
-    calculateBtn: 'Calculate Corridor Metrics',
+    calculateBtn: 'Request Feasibility Assessment',
     estTransit: 'Est. Maritime Transit',
     estTax: 'Effective Corporate Tax',
     estSupport: 'Macan Facilitation Support',
@@ -259,6 +272,17 @@ const DICTIONARY_EN: ContentDictionary = {
     cr: 'Oman Commercial Registration No: 10849202 | Tax Identification ID: OM-849201',
     rights: '© 2026 Macan Group. All Rights Reserved. Sovereign Accredited Enterprise.',
     domainsTitle: 'Macan Enterprise Network',
+    contactTitle: 'Contact',
+  },
+  contact: {
+    mailtoHint: 'Your email app will open with the details pre-filled — just review and send.',
+    formName: 'Your Name',
+    formEmail: 'Your Email',
+    formCompany: 'Company',
+    formMessage: 'How can we help?',
+    sendBtn: 'Compose Email to Macan Group',
+    quoteTitle: 'Request a Tailored Quote',
+    quoteSub: 'Tell us about your project and our advisory team will respond within one business day.',
   },
 };
 
@@ -354,7 +378,7 @@ const DICTIONARY_AR: ContentDictionary = {
     spotlightProject: 'مجمع الدقم للتصنيع والتجميع الثقيل',
     spotlightSector: 'التصنيع الهيكلي للصلب ومعدات الهيدروجين الأخضر',
     spotlightStatus: 'دراسة الجدوى معتمدة • تخصيص 150,000 متر مربع',
-    ctaProspectus: 'تحميل نشرة الاستثمار (PDF)',
+    ctaProspectus: 'طلب نشرة الاستثمار',
   },
   industrialPage: {
     heroTitle: 'التجهيز الهندسي وإنشاء المصانع',
@@ -371,7 +395,7 @@ const DICTIONARY_AR: ContentDictionary = {
     formProjectLabel: 'قطاع / نوع المشروع',
     formLandLabel: 'المساحة المطلوبة (متر مربع)',
     formFreezoneLabel: 'المنطقة الحرة المستهدفة',
-    formUploadBtn: 'إرفاق مخططات CAD / DWG / PDF',
+    formUploadBtn: 'بعد فتح البريد الإلكتروني، أرفق مخططات CAD / DWG / PDF قبل الإرسال.',
     formSubmitBtn: 'إرسال طلب الاستشارة الهندسية',
   },
   tradePage: {
@@ -382,15 +406,15 @@ const DICTIONARY_AR: ContentDictionary = {
     originsLabel: 'موانئ المغادرة (الصين)',
     destsLabel: 'موانئ الوصول (عُمان)',
     modesLabel: 'أنماط الشحن المتاحة',
-    calcTitle: 'حاسبة أسعار الشحن البحري الفوري',
+    calcTitle: 'اطلب عرض سعر الشحن البحري',
     calcContainerType: 'نوع الحاوية / البضاعة',
-    calcWeight: 'الوزن الإجمالي (طن متري / TEU)',
-    calcEstimateBtn: 'احسب تكلفة الشحن',
+    calcWeight: 'عدد الحاويات / الوحدات',
+    calcEstimateBtn: 'طلب عرض سعر الشحن',
     calcResultLabel: 'التكلفة التقديرية للشحن (CIF عُمان)',
   },
   calculator: {
-    title: 'حاسبة الجدوى للممر الاستثماري والتجاري',
-    sub: 'قم بتقدير المهل الزمنية للشحن والمزايا الضريبية المتاحة لمشروعك.',
+    title: 'استفسار جدوى الممر',
+    sub: 'أخبرنا بمعطيات مشروعك وسيرسل فريق الاستشارات تقييماً مخصصاً للممر.',
     typeLabel: 'حدد قطاع الأعمال',
     typeOptions: {
       capital: 'استثمار أجنبي ومشاريع مشتركة',
@@ -399,7 +423,7 @@ const DICTIONARY_AR: ContentDictionary = {
     },
     locationLabel: 'المنطقة الحرة المستهدفة',
     metricLabel: 'حجم العمليات (ميزانية المشروع / عدد الحاويات)',
-    calculateBtn: 'احسب المؤشرات',
+    calculateBtn: 'طلب تقييم الجدوى',
     estTransit: 'المدة الزمنية المتوقعة للشحن',
     estTax: 'نسبة الضريبة الفعّالة',
     estSupport: 'مستوى التسهيلات من ماكان',
@@ -409,6 +433,17 @@ const DICTIONARY_AR: ContentDictionary = {
     cr: 'السجل التجاري السلطني رقم: 10849202 | الرقم الضريبي: OM-849201',
     rights: '© 2026 مجموعة ماكان. جميع الحقوق محفوظة. مؤسسة معتمدة سيادياً.',
     domainsTitle: 'شبكة نطاقات مجموعة ماكان',
+    contactTitle: 'التواصل',
+  },
+  contact: {
+    mailtoHint: 'سيفتح تطبيق البريد لديك والبيانات معبأة مسبقاً — راجعها ثم أرسلها.',
+    formName: 'الاسم',
+    formEmail: 'البريد الإلكتروني',
+    formCompany: 'الشركة',
+    formMessage: 'كيف يمكننا مساعدتك؟',
+    sendBtn: 'إنشاء بريد إلكتروني إلى مجموعة ماكان',
+    quoteTitle: 'اطلب عرض سعر مخصص',
+    quoteSub: 'أخبرنا عن مشروعك وسيرد فريق الاستشارات لدينا خلال يوم عمل واحد.',
   },
 };
 
@@ -504,7 +539,7 @@ const DICTIONARY_ZH: ContentDictionary = {
     spotlightProject: '杜古姆重型装备制造与装配枢纽',
     spotlightSector: '钢结构加工、模块化设备与绿色氢能机械',
     spotlightStatus: '可行性研究已批准 • 已获批 150,000 平方米自贸区用地',
-    ctaProspectus: '下载投资招股说明书 (PDF)',
+    ctaProspectus: '索取投资招股说明书',
   },
   industrialPage: {
     heroTitle: '交钥匙工厂建设与工程服务',
@@ -521,7 +556,7 @@ const DICTIONARY_ZH: ContentDictionary = {
     formProjectLabel: '项目类型 / 行业',
     formLandLabel: '所需土地面积 (m²)',
     formFreezoneLabel: '目标阿曼自贸区',
-    formUploadBtn: '上传 CAD 图纸 / DWG / PDF',
+    formUploadBtn: '邮件打开后，请在发送前附上 CAD / DWG / PDF 图纸。',
     formSubmitBtn: '提交工程咨询申请',
   },
   tradePage: {
@@ -532,15 +567,15 @@ const DICTIONARY_ZH: ContentDictionary = {
     originsLabel: '始发港口 (中国)',
     destsLabel: '目的港口 (阿曼)',
     modesLabel: '运输模式',
-    calcTitle: '海运运费实时测算器',
+    calcTitle: '索取海运运费报价',
     calcContainerType: '货物 / 集装箱类型',
-    calcWeight: '货物总重 (公吨 / TEU)',
-    calcEstimateBtn: '测算海运运费',
+    calcWeight: '集装箱 / 单位数量',
+    calcEstimateBtn: '索取运费报价',
     calcResultLabel: '预估海运费用 (CIF 阿曼)',
   },
   calculator: {
-    title: '中阿拓展可行性与物流测算器',
-    sub: '实时测算您的项目航程时效及阿曼主权税收优惠。',
+    title: '走廊可行性咨询',
+    sub: '请告知您的项目参数，我们的咨询团队将发送定制的走廊评估。',
     typeLabel: '选择业务板块',
     typeOptions: {
       capital: 'FDI 投资与合资企业',
@@ -549,7 +584,7 @@ const DICTIONARY_ZH: ContentDictionary = {
     },
     locationLabel: '目标自贸区',
     metricLabel: '规模指标 (投资预算万美元 / 集装箱柜数)',
-    calculateBtn: '开始测算',
+    calculateBtn: '申请可行性评估',
     estTransit: '预计海运航程时效',
     estTax: '实际有效企业税率',
     estSupport: '麦肯协助与协助级别',
@@ -559,6 +594,17 @@ const DICTIONARY_ZH: ContentDictionary = {
     cr: '阿曼商业注册号 (CR): 10849202 | 税务登记号: OM-849201',
     rights: '© 2026 麦肯集团. 保留所有权利。主权认证企业。',
     domainsTitle: '麦肯集团子品牌域名矩阵',
+    contactTitle: '联系方式',
+  },
+  contact: {
+    mailtoHint: '您的邮件应用将打开并预填内容 — 确认后发送即可。',
+    formName: '您的姓名',
+    formEmail: '您的邮箱',
+    formCompany: '公司名称',
+    formMessage: '我们能为您提供什么帮助？',
+    sendBtn: '撰写邮件至麦肯集团',
+    quoteTitle: '获取定制报价',
+    quoteSub: '请告知您的项目详情，我们的咨询团队将在一个工作日内回复。',
   },
 };
 
@@ -573,61 +619,37 @@ export default function MacanGlobalPlatform() {
   const [activePage, setActivePage] = useState<PageView>('index');
   const [activePillar, setActivePillar] = useState<'capital' | 'industrial' | 'trade'>('capital');
   const [selectedNode, setSelectedNode] = useState<'muscat' | 'sohar' | 'duqm' | 'ningbo' | 'shenzhen'>('muscat');
-  
-  // Interactive Modal State
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>('');
-  const [modalSubmitted, setModalSubmitted] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  // Global Calculator State
+  // Inquiry form inputs (submitted via the visitor's email client)
   const [calcPillar, setCalcPillar] = useState<'capital' | 'industrial' | 'logistics'>('capital');
   const [calcLocation, setCalcLocation] = useState<string>('Sohar Freezone');
   const [calcValue, setCalcValue] = useState<number>(50);
-  const [calcResult, setCalcResult] = useState<{ transit: string; tax: string; support: string } | null>(null);
 
-  // Logistics Freight Form State
   const [freightType, setFreightType] = useState<string>('40ft High Cube Container');
   const [freightQty, setFreightQty] = useState<number>(5);
-  const [freightCost, setFreightCost] = useState<number | null>(null);
+
+  const [industrialForm, setIndustrialForm] = useState({ project: '', land: '', zone: 'Sohar Freezone' });
 
   const t = DICTIONARIES[lang];
 
-  useEffect(() => {
-    handleCalculate();
-  }, [calcPillar, calcLocation, calcValue, lang]);
-
-  const handleCalculate = () => {
-    let transit = '12 - 14 Days Direct';
-    let tax = '0% (Up to 25 Years Holiday)';
-    let support = 'Sovereign Priority Facilitation';
-
-    if (calcPillar === 'logistics') {
-      transit = calcLocation.includes('Duqm') ? '12 Days Express' : '14 Days Direct';
-      tax = '0% Customs Tariffs';
-      support = 'Guaranteed Berth Allocation';
-    } else if (calcPillar === 'industrial') {
-      transit = 'N/A (Turnkey EPC)';
-      tax = '0% Corporate Tax (25 Yrs)';
-      support = 'Ministry License Fast-Track';
-    } else {
-      transit = 'N/A (FDI Structuring)';
-      tax = '0% Capital Repatriation';
-      support = 'Sovereign Wealth Co-Investment';
-    }
-
-    setCalcResult({ transit, tax, support });
+  // Build a mailto: link and hand off to the visitor's email client.
+  const sendEmail = (subject: string, fields: Record<string, string | number>) => {
+    const body =
+      Object.entries(fields)
+        .filter(([, v]) => v !== '' && v !== undefined && v !== null)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join('\n') +
+      `\n\n— Sent from the Macan Group website`;
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
   };
 
-  const calculateFreightRate = (e: React.FormEvent) => {
-    e.preventDefault();
-    const baseRatePerUnit = freightType.includes('Breakbulk') ? 2800 : 1850;
-    setFreightCost(baseRatePerUnit * freightQty);
-  };
-
-  const openActionModal = (title: string) => {
-    setModalTitle(title);
-    setModalSubmitted(false);
-    setModalOpen(true);
+  const goToPage = (page: PageView) => {
+    setActivePage(page);
+    setMobileMenuOpen(false);
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0 });
   };
 
   return (
@@ -636,11 +658,12 @@ export default function MacanGlobalPlatform() {
       {}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0A192F]/90 border-b border-[#D4AF37]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          
+
           {/* Logo Branding */}
-          <div 
-            onClick={() => setActivePage('index')}
-            className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer group"
+          <button
+            type="button"
+            onClick={() => goToPage('index')}
+            className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer group text-start"
           >
             <div className="w-10 h-10 rounded bg-gradient-to-br from-[#D4AF37] to-[#AA7C11] p-0.5 flex items-center justify-center shadow-lg shadow-[#D4AF37]/20 group-hover:scale-105 transition-transform">
               <div className="w-full h-full bg-[#0A192F] rounded-sm flex items-center justify-center font-bold text-[#D4AF37] text-xl">
@@ -655,38 +678,23 @@ export default function MacanGlobalPlatform() {
                 {t.nav.subBrand}
               </div>
             </div>
-          </div>
+          </button>
 
           {/* Desktop Page Navigation Router */}
           <nav className="hidden md:flex items-center space-x-8 rtl:space-x-reverse text-sm font-medium text-slate-300">
-            <button 
-              onClick={() => setActivePage('index')}
-              className={`hover:text-[#D4AF37] transition-colors ${activePage === 'index' ? 'text-[#D4AF37] border-b-2 border-[#D4AF37] pb-1' : ''}`}
-            >
-              {t.nav.index}
-            </button>
-            <button 
-              onClick={() => setActivePage('capital')}
-              className={`hover:text-[#D4AF37] transition-colors ${activePage === 'capital' ? 'text-[#D4AF37] border-b-2 border-[#D4AF37] pb-1' : ''}`}
-            >
-              {t.nav.capital}
-            </button>
-            <button 
-              onClick={() => setActivePage('industrial')}
-              className={`hover:text-[#D4AF37] transition-colors ${activePage === 'industrial' ? 'text-[#D4AF37] border-b-2 border-[#D4AF37] pb-1' : ''}`}
-            >
-              {t.nav.industrial}
-            </button>
-            <button 
-              onClick={() => setActivePage('trade')}
-              className={`hover:text-[#D4AF37] transition-colors ${activePage === 'trade' ? 'text-[#D4AF37] border-b-2 border-[#D4AF37] pb-1' : ''}`}
-            >
-              {t.nav.trade}
-            </button>
+            {(['index', 'capital', 'industrial', 'trade'] as const).map((page) => (
+              <button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={`hover:text-[#D4AF37] transition-colors ${activePage === page ? 'text-[#D4AF37] border-b-2 border-[#D4AF37] pb-1' : ''}`}
+              >
+                {t.nav[page]}
+              </button>
+            ))}
           </nav>
 
           {/* Language Switcher & Action CTA */}
-          <div className="flex items-center space-x-4 rtl:space-x-reverse">
+          <div className="flex items-center space-x-3 sm:space-x-4 rtl:space-x-reverse">
             <div className="flex bg-[#1E293B] border border-[#334155] rounded-md p-1 text-xs">
               <button
                 onClick={() => setLang('en')}
@@ -708,14 +716,48 @@ export default function MacanGlobalPlatform() {
               </button>
             </div>
 
-            <button
-              onClick={() => openActionModal(t.nav.ctaConsult)}
+            <a
+              href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Macan Group — Advisory Enquiry')}`}
               className="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs font-semibold rounded bg-gradient-to-r from-[#D4AF37] to-[#B8962E] text-[#0A192F] hover:opacity-95 transition-opacity shadow-md"
             >
               {t.nav.ctaConsult}
+            </a>
+
+            {/* Mobile menu toggle */}
+            <button
+              type="button"
+              aria-label="Menu"
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded border border-[#334155] text-slate-200"
+            >
+              {mobileMenuOpen ? '✕' : '☰'}
             </button>
           </div>
         </div>
+
+        {/* Mobile navigation panel */}
+        {mobileMenuOpen && (
+          <nav className="md:hidden border-t border-[#D4AF37]/20 bg-[#0A192F] px-4 py-3 space-y-1">
+            {(['index', 'capital', 'industrial', 'trade'] as const).map((page) => (
+              <button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={`block w-full text-start px-3 py-2.5 rounded text-sm font-medium transition-colors ${
+                  activePage === page ? 'bg-[#1E293B] text-[#D4AF37]' : 'text-slate-300 hover:bg-[#1E293B]'
+                }`}
+              >
+                {t.nav[page]}
+              </button>
+            ))}
+            <a
+              href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Macan Group — Advisory Enquiry')}`}
+              className="block w-full text-start px-3 py-2.5 rounded text-sm font-semibold bg-gradient-to-r from-[#D4AF37] to-[#B8962E] text-[#0A192F]"
+            >
+              {t.nav.ctaConsult}
+            </a>
+          </nav>
+        )}
       </header>
 
       {}
@@ -760,13 +802,13 @@ export default function MacanGlobalPlatform() {
 
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
-                  onClick={() => setActivePage('capital')}
+                  onClick={() => goToPage('capital')}
                   className="w-full sm:w-auto px-8 py-4 rounded-md bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold text-base hover:shadow-lg hover:shadow-[#D4AF37]/20 transition-all duration-200 text-center"
                 >
                   {t.hero.ctaPrimary}
                 </button>
                 <button
-                  onClick={() => setActivePage('trade')}
+                  onClick={() => goToPage('trade')}
                   className="w-full sm:w-auto px-8 py-4 rounded-md bg-[#1E293B] border border-[#334155] text-white hover:bg-[#334155] font-semibold text-base transition-all duration-200 text-center"
                 >
                   {t.hero.ctaSecondary}
@@ -836,7 +878,7 @@ export default function MacanGlobalPlatform() {
                         <li className="flex items-center space-x-3 rtl:space-x-reverse"><span className="text-[#D4AF37]">✔</span><span>{t.pillars.capital.b3}</span></li>
                       </ul>
                       <button 
-                        onClick={() => setActivePage('capital')}
+                        onClick={() => goToPage('capital')}
                         className="mt-8 px-6 py-3 rounded bg-[#D4AF37] text-[#0A192F] font-bold text-sm hover:opacity-90 transition-opacity"
                       >
                         {t.pillars.capital.cta}
@@ -865,7 +907,7 @@ export default function MacanGlobalPlatform() {
                         <li className="flex items-center space-x-3 rtl:space-x-reverse"><span className="text-[#D4AF37]">✔</span><span>{t.pillars.industrial.b3}</span></li>
                       </ul>
                       <button 
-                        onClick={() => setActivePage('industrial')}
+                        onClick={() => goToPage('industrial')}
                         className="mt-8 px-6 py-3 rounded bg-[#D4AF37] text-[#0A192F] font-bold text-sm hover:opacity-90 transition-opacity"
                       >
                         {t.pillars.industrial.cta}
@@ -894,7 +936,7 @@ export default function MacanGlobalPlatform() {
                         <li className="flex items-center space-x-3 rtl:space-x-reverse"><span className="text-[#D4AF37]">✔</span><span>{t.pillars.trade.b3}</span></li>
                       </ul>
                       <button 
-                        onClick={() => setActivePage('trade')}
+                        onClick={() => goToPage('trade')}
                         className="mt-8 px-6 py-3 rounded bg-[#D4AF37] text-[#0A192F] font-bold text-sm hover:opacity-90 transition-opacity"
                       >
                         {t.pillars.trade.cta}
@@ -1014,12 +1056,16 @@ export default function MacanGlobalPlatform() {
               <div className="font-mono text-xs text-[#D4AF37] bg-[#0A192F] p-4 rounded border border-[#334155]">
                 {t.capitalPage.spotlightStatus}
               </div>
-              <button
-                onClick={() => openActionModal('Investment Prospectus Download')}
-                className="px-6 py-3 bg-[#D4AF37] text-[#0A192F] font-bold rounded hover:opacity-90 text-sm"
+              <a
+                href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+                  'Investment Prospectus Request — ' + t.capitalPage.spotlightProject
+                )}&body=${encodeURIComponent(
+                  'Please send the investment prospectus for: ' + t.capitalPage.spotlightProject + '\n\nName:\nCompany:\nCountry:'
+                )}`}
+                className="inline-flex px-6 py-3 bg-[#D4AF37] text-[#0A192F] font-bold rounded hover:opacity-90 text-sm"
               >
                 {t.capitalPage.ctaProspectus}
-              </button>
+              </a>
             </div>
           </div>
         </main>
@@ -1056,34 +1102,62 @@ export default function MacanGlobalPlatform() {
               </div>
             </div>
 
-            {/* Industrial Spec Upload Form */}
+            {/* Industrial Spec Enquiry Form */}
             <div className="bg-[#1E293B] p-8 rounded-xl border border-[#D4AF37]/30 max-w-3xl mx-auto space-y-6">
               <h2 className="text-2xl font-bold text-white text-center">{t.industrialPage.formTitle}</h2>
-              <form onSubmit={(e) => { e.preventDefault(); openActionModal('Technical Spec Upload'); }} className="space-y-4">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendEmail('Industrial Project Enquiry — ' + (industrialForm.project || 'Untitled'), {
+                    [t.industrialPage.formProjectLabel]: industrialForm.project,
+                    [t.industrialPage.formLandLabel]: industrialForm.land,
+                    [t.industrialPage.formFreezoneLabel]: industrialForm.zone,
+                  });
+                }}
+                className="space-y-4"
+              >
                 <div>
                   <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formProjectLabel}</label>
-                  <input type="text" placeholder="e.g. Steel Pipe Fabrication Plant" required className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white" />
+                  <input
+                    type="text"
+                    required
+                    value={industrialForm.project}
+                    onChange={(e) => setIndustrialForm((f) => ({ ...f, project: e.target.value }))}
+                    placeholder="e.g. Steel Pipe Fabrication Plant"
+                    className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
+                  />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formLandLabel}</label>
-                    <input type="number" placeholder="50000" required className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white" />
+                    <input
+                      type="number"
+                      value={industrialForm.land}
+                      onChange={(e) => setIndustrialForm((f) => ({ ...f, land: e.target.value }))}
+                      placeholder="50000"
+                      className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formFreezoneLabel}</label>
-                    <select className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white">
+                    <select
+                      value={industrialForm.zone}
+                      onChange={(e) => setIndustrialForm((f) => ({ ...f, zone: e.target.value }))}
+                      className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
+                    >
                       <option>Sohar Freezone</option>
                       <option>Duqm SEZ</option>
                       <option>Salalah Freezone</option>
                     </select>
                   </div>
                 </div>
-                <div className="border-2 border-dashed border-[#334155] p-6 rounded text-center cursor-pointer hover:border-[#D4AF37]/50">
-                  <span className="text-xs text-slate-400 font-mono">{t.industrialPage.formUploadBtn}</span>
-                </div>
+                <p className="border border-dashed border-[#334155] p-4 rounded text-xs text-slate-400 font-mono">
+                  {t.industrialPage.formUploadBtn}
+                </p>
                 <button type="submit" className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold rounded text-sm">
                   {t.industrialPage.formSubmitBtn}
                 </button>
+                <p className="text-[11px] text-slate-500 text-center">{t.contact.mailtoHint}</p>
               </form>
             </div>
           </div>
@@ -1125,14 +1199,26 @@ export default function MacanGlobalPlatform() {
               </div>
             </div>
 
-            {/* Instant Freight Calculator */}
+            {/* Ocean Freight Quote Request */}
             <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155] max-w-3xl mx-auto space-y-6">
-              <h2 className="text-2xl font-bold text-white text-center">{t.tradePage.calcTitle}</h2>
-              <form onSubmit={calculateFreightRate} className="space-y-4">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-white">{t.tradePage.calcTitle}</h2>
+                <p className="mt-2 text-sm text-slate-400">{t.contact.quoteSub}</p>
+              </div>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendEmail('Ocean Freight Quote Request', {
+                    [t.tradePage.calcContainerType]: freightType,
+                    [t.tradePage.calcWeight]: freightQty,
+                  });
+                }}
+                className="space-y-4"
+              >
                 <div>
                   <label className="block text-xs text-slate-300 mb-1">{t.tradePage.calcContainerType}</label>
-                  <select 
-                    value={freightType} 
+                  <select
+                    value={freightType}
                     onChange={(e) => setFreightType(e.target.value)}
                     className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
                   >
@@ -1143,27 +1229,20 @@ export default function MacanGlobalPlatform() {
                 </div>
                 <div>
                   <label className="block text-xs text-slate-300 mb-1">{t.tradePage.calcWeight}</label>
-                  <input 
-                    type="number" 
-                    min="1" 
-                    max="50" 
-                    value={freightQty} 
+                  <input
+                    type="number"
+                    min="1"
+                    max="500"
+                    value={freightQty}
                     onChange={(e) => setFreightQty(Number(e.target.value))}
-                    className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white" 
+                    className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
                   />
                 </div>
                 <button type="submit" className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold rounded text-sm">
                   {t.tradePage.calcEstimateBtn}
                 </button>
+                <p className="text-[11px] text-slate-500 text-center">{t.contact.mailtoHint}</p>
               </form>
-
-              {freightCost !== null && (
-                <div className="bg-[#0A192F] p-6 rounded border border-emerald-500/40 text-center font-mono space-y-2">
-                  <span className="text-xs text-slate-400">{t.tradePage.calcResultLabel}</span>
-                  <div className="text-3xl font-extrabold text-emerald-400">${freightCost.toLocaleString()} USD</div>
-                  <span className="text-[10px] text-slate-400 block">* Includes Oman Port Clearance & Direct Vessel Booking</span>
-                </div>
-              )}
             </div>
           </div>
         </main>
@@ -1177,12 +1256,22 @@ export default function MacanGlobalPlatform() {
             <p className="mt-3 text-sm text-slate-400">{t.calculator.sub}</p>
           </div>
 
-          <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155] space-y-6">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              sendEmail('Corridor Feasibility Enquiry', {
+                [t.calculator.typeLabel]: t.calculator.typeOptions[calcPillar],
+                [t.calculator.locationLabel]: calcLocation,
+                [t.calculator.metricLabel]: `${calcValue}`,
+              });
+            }}
+            className="bg-[#1E293B] p-8 rounded-xl border border-[#334155] space-y-6"
+          >
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-2">{t.calculator.typeLabel}</label>
               <select
                 value={calcPillar}
-                onChange={(e) => setCalcPillar(e.target.value as any)}
+                onChange={(e) => setCalcPillar(e.target.value as 'capital' | 'industrial' | 'logistics')}
                 className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
               >
                 <option value="capital">{t.calculator.typeOptions.capital}</option>
@@ -1219,73 +1308,16 @@ export default function MacanGlobalPlatform() {
               />
             </div>
 
-            {calcResult && (
-              <div className="bg-[#0A192F] p-6 rounded border border-[#D4AF37]/30 grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
-                <div>
-                  <span className="text-slate-400 block">{t.calculator.estTransit}</span>
-                  <span className="text-white font-bold text-sm">{calcResult.transit}</span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block">{t.calculator.estTax}</span>
-                  <span className="text-emerald-400 font-bold text-sm">{calcResult.tax}</span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block">{t.calculator.estSupport}</span>
-                  <span className="text-[#D4AF37] font-bold text-sm">{calcResult.support}</span>
-                </div>
-              </div>
-            )}
-
             <button
-              onClick={handleCalculate}
+              type="submit"
               className="w-full py-3.5 rounded bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold text-sm hover:opacity-95 transition-opacity shadow-lg"
             >
               {t.calculator.calculateBtn}
             </button>
-          </div>
+            <p className="text-[11px] text-slate-500 text-center">{t.contact.mailtoHint}</p>
+          </form>
         </div>
       </section>
-
-      {}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="bg-[#1E293B] border border-[#D4AF37]/50 p-8 rounded-xl max-w-md w-full relative space-y-6">
-            <button
-              onClick={() => setModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white font-mono text-lg"
-            >
-              ✕
-            </button>
-            <h3 className="text-xl font-bold text-white">{modalTitle}</h3>
-
-            {modalSubmitted ? (
-              <div className="text-center py-6 font-mono space-y-3">
-                <div className="text-3xl">✅</div>
-                <div className="text-emerald-400 font-bold text-sm">Request Transmitted to Muscat HQ</div>
-                <p className="text-xs text-slate-300">A Macan Group sovereign investment advisor will contact you within 24 hours.</p>
-              </div>
-            ) : (
-              <form onSubmit={(e) => { e.preventDefault(); setModalSubmitted(true); }} className="space-y-4">
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">Corporate Representative Name</label>
-                  <input type="text" required className="w-full bg-[#0A192F] border border-[#334155] rounded px-3 py-2 text-sm text-white" />
-                </div>
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">Corporate Email Address</label>
-                  <input type="email" required className="w-full bg-[#0A192F] border border-[#334155] rounded px-3 py-2 text-sm text-white" />
-                </div>
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">Company / Sovereign Fund Name</label>
-                  <input type="text" required className="w-full bg-[#0A192F] border border-[#334155] rounded px-3 py-2 text-sm text-white" />
-                </div>
-                <button type="submit" className="w-full py-3 bg-[#D4AF37] text-[#0A192F] font-bold rounded text-sm hover:opacity-90">
-                  Submit Official Request
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
 
       {}
       <footer className="bg-[#0A192F] border-t border-[#1E293B] py-16 text-slate-400 text-xs">
@@ -1300,15 +1332,21 @@ export default function MacanGlobalPlatform() {
               </div>
               <p className="text-slate-300 max-w-md leading-relaxed">{t.footer.hq}</p>
               <div className="font-mono text-slate-400">{t.footer.cr}</div>
+              <div>
+                <span className="text-slate-500 block mb-1">{t.footer.contactTitle}</span>
+                <a href={`mailto:${CONTACT_EMAIL}`} className="text-[#D4AF37] font-mono hover:underline">
+                  {CONTACT_EMAIL}
+                </a>
+              </div>
             </div>
 
             <div>
               <h4 className="text-white font-bold mb-3">{t.footer.domainsTitle}</h4>
               <ul className="space-y-2 font-mono text-slate-300">
-                <li><button onClick={() => setActivePage('index')} className="hover:text-[#D4AF37]">macangroup.com</button></li>
-                <li><button onClick={() => setActivePage('capital')} className="hover:text-[#D4AF37]">macancapital.com</button></li>
-                <li><button onClick={() => setActivePage('industrial')} className="hover:text-[#D4AF37]">macanindustrial.com</button></li>
-                <li><button onClick={() => setActivePage('trade')} className="hover:text-[#D4AF37]">macantrade.com</button></li>
+                <li><button onClick={() => goToPage('index')} className="hover:text-[#D4AF37]">macangroup.com</button></li>
+                <li><button onClick={() => goToPage('capital')} className="hover:text-[#D4AF37]">macancapital.com</button></li>
+                <li><button onClick={() => goToPage('industrial')} className="hover:text-[#D4AF37]">macanindustrial.com</button></li>
+                <li><button onClick={() => goToPage('trade')} className="hover:text-[#D4AF37]">macantrade.com</button></li>
               </ul>
             </div>
 
@@ -1325,11 +1363,12 @@ export default function MacanGlobalPlatform() {
 
           <div className="border-t border-[#1E293B] pt-8 flex flex-col sm:flex-row items-center justify-between text-slate-500">
             <div>{t.footer.rights}</div>
-            <div className="mt-4 sm:mt-0 space-x-6 rtl:space-x-reverse">
-              <a href="#" className="hover:text-slate-300">Privacy Policy</a>
-              <a href="#" className="hover:text-slate-300">Sovereign Compliance</a>
-              <a href="#" className="hover:text-slate-300">Terms of Investment</a>
-            </div>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="mt-4 sm:mt-0 font-mono hover:text-[#D4AF37]"
+            >
+              {CONTACT_EMAIL}
+            </a>
           </div>
         </div>
       </footer>

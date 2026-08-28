@@ -1,0 +1,30 @@
+# Static Next.js export on Apache / cPanel
+
+# Canonical host: redirect www -> apex (macanco.com).
+# HTTPS is enforced by cPanel's "Force HTTPS Redirect" toggle (proxy-aware).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Serve the exported 404 page for unknown URLs
+ErrorDocument 404 /404.html
+
+# Directory URLs (/foo/) resolve to their index.html automatically via DirectoryIndex
+DirectoryIndex index.html
+
+# Long-cache fingerprinted build assets; HTML stays revalidated
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2?|ttf|otf|svg|png|jpe?g|gif|webp|avif|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# Compress text assets if mod_deflate is available
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>

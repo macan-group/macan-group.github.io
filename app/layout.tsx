@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://macan-group.github.io"),
+  metadataBase: new URL("https://macanco.com"),
   title: "Macan Group — Built on Trust, Driven by Global Capital",
   description:
     "Headquartered in Muscat, Macan Group bridges Middle Eastern investment, turnkey industrial plant setups, and cross-border logistics across the Sultanate of Oman.",
