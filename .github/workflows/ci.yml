@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build static export
+        run: npm run build
+
+      - name: Check PHP handler syntax
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq php-cli
+          php -l public/sendmail.php
+
+      - name: Upload static site
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-site
+          path: out/
+          retention-days: 7

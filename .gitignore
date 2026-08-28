@@ -19,6 +19,11 @@
 
 # production
 /build
+/macan-site.zip
+
+# deploy
+.ftp-deploy-sync-state.json
+/scripts/deploy.env
 
 # misc
 .DS_Store

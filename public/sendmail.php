@@ -26,6 +26,13 @@ $ALLOWED_EXT = ['pdf','dwg','dxf','step','stp','igs','iges','zip','doc','docx','
 $RATE_SECONDS = 20;                           // min gap between sends per IP
 // ---------------------------------------------------------------------------
 
+// Optional server-only overrides that survive redeploys (not in the repo,
+// excluded from the deploy sync). Copy sendmail.config.example.php to
+// sendmail.config.php on the server to change $TO/$FROM without a rebuild.
+if (is_file(__DIR__ . '/sendmail.config.php')) {
+    require __DIR__ . '/sendmail.config.php';
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 
