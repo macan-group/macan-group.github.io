@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Macan Group">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#D4AF37"/>
+      <stop offset="1" stop-color="#AA7C11"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="url(#g)"/>
+  <rect x="5" y="5" width="54" height="54" rx="8" fill="#0A192F"/>
+  <path d="M15 46V19h7l10 14 10-14h7v27h-8V32l-9 12-9-12v14z" fill="#D4AF37"/>
+</svg>

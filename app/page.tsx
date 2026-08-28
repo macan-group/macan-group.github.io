@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // --- TYPES & INTERFACES ---
 type Language = 'en' | 'ar' | 'zh';
 type PageView = 'index' | 'capital' | 'industrial' | 'trade';
+type FormStatus = 'idle' | 'sending' | 'sent' | 'error';
 
 interface ContentDictionary {
   dir: 'ltr' | 'rtl';
@@ -112,14 +113,14 @@ interface ContentDictionary {
     contactTitle: string;
   };
   contact: {
-    mailtoHint: string;
-    formName: string;
-    formEmail: string;
-    formCompany: string;
-    formMessage: string;
-    sendBtn: string;
-    quoteTitle: string;
     quoteSub: string;
+    yourName: string;
+    yourEmail: string;
+    yourNote: string;
+    sending: string;
+    sent: string;
+    errorMsg: string;
+    fileLabel: string;
   };
 }
 
@@ -217,7 +218,7 @@ const DICTIONARY_EN: ContentDictionary = {
     spotlightProject: 'Duqm Heavy Fabrication & Assembly Hub',
     spotlightSector: 'Steel Fabrication, Modular Processing & Green Hydrogen Machinery',
     spotlightStatus: 'Feasibility Approved • 150,000 Sq. Meters Land Allocated',
-    ctaProspectus: 'Request Investment Prospectus',
+    ctaProspectus: 'Open Investment Prospectus',
   },
   industrialPage: {
     heroTitle: 'Turnkey Plant Setup & Engineering',
@@ -275,14 +276,14 @@ const DICTIONARY_EN: ContentDictionary = {
     contactTitle: 'Contact',
   },
   contact: {
-    mailtoHint: 'Your email app will open with the details pre-filled — just review and send.',
-    formName: 'Your Name',
-    formEmail: 'Your Email',
-    formCompany: 'Company',
-    formMessage: 'How can we help?',
-    sendBtn: 'Compose Email to Macan Group',
-    quoteTitle: 'Request a Tailored Quote',
     quoteSub: 'Tell us about your project and our advisory team will respond within one business day.',
+    yourName: 'Your name',
+    yourEmail: 'Your email',
+    yourNote: 'Message (optional)',
+    sending: 'Sending…',
+    sent: 'Thank you — your enquiry has reached our advisory desk. We reply within one business day.',
+    errorMsg: 'We could not send your enquiry. Please email us directly:',
+    fileLabel: 'Attach drawings — PDF, DWG, DXF, STEP or ZIP (max 10 MB total)',
   },
 };
 
@@ -378,7 +379,7 @@ const DICTIONARY_AR: ContentDictionary = {
     spotlightProject: 'مجمع الدقم للتصنيع والتجميع الثقيل',
     spotlightSector: 'التصنيع الهيكلي للصلب ومعدات الهيدروجين الأخضر',
     spotlightStatus: 'دراسة الجدوى معتمدة • تخصيص 150,000 متر مربع',
-    ctaProspectus: 'طلب نشرة الاستثمار',
+    ctaProspectus: 'فتح نشرة الاستثمار',
   },
   industrialPage: {
     heroTitle: 'التجهيز الهندسي وإنشاء المصانع',
@@ -436,14 +437,14 @@ const DICTIONARY_AR: ContentDictionary = {
     contactTitle: 'التواصل',
   },
   contact: {
-    mailtoHint: 'سيفتح تطبيق البريد لديك والبيانات معبأة مسبقاً — راجعها ثم أرسلها.',
-    formName: 'الاسم',
-    formEmail: 'البريد الإلكتروني',
-    formCompany: 'الشركة',
-    formMessage: 'كيف يمكننا مساعدتك؟',
-    sendBtn: 'إنشاء بريد إلكتروني إلى مجموعة ماكان',
-    quoteTitle: 'اطلب عرض سعر مخصص',
     quoteSub: 'أخبرنا عن مشروعك وسيرد فريق الاستشارات لدينا خلال يوم عمل واحد.',
+    yourName: 'الاسم',
+    yourEmail: 'البريد الإلكتروني',
+    yourNote: 'رسالة (اختياري)',
+    sending: 'جارٍ الإرسال…',
+    sent: 'شكراً لك — وصل طلبك إلى فريق الاستشارات لدينا. نرد خلال يوم عمل واحد.',
+    errorMsg: 'تعذّر إرسال طلبك. يرجى مراسلتنا مباشرة:',
+    fileLabel: 'أرفق المخططات — PDF أو DWG أو DXF أو STEP أو ZIP (بحد أقصى 10 ميغابايت)',
   },
 };
 
@@ -539,7 +540,7 @@ const DICTIONARY_ZH: ContentDictionary = {
     spotlightProject: '杜古姆重型装备制造与装配枢纽',
     spotlightSector: '钢结构加工、模块化设备与绿色氢能机械',
     spotlightStatus: '可行性研究已批准 • 已获批 150,000 平方米自贸区用地',
-    ctaProspectus: '索取投资招股说明书',
+    ctaProspectus: '查看投资说明书',
   },
   industrialPage: {
     heroTitle: '交钥匙工厂建设与工程服务',
@@ -597,14 +598,14 @@ const DICTIONARY_ZH: ContentDictionary = {
     contactTitle: '联系方式',
   },
   contact: {
-    mailtoHint: '您的邮件应用将打开并预填内容 — 确认后发送即可。',
-    formName: '您的姓名',
-    formEmail: '您的邮箱',
-    formCompany: '公司名称',
-    formMessage: '我们能为您提供什么帮助？',
-    sendBtn: '撰写邮件至麦肯集团',
-    quoteTitle: '获取定制报价',
     quoteSub: '请告知您的项目详情，我们的咨询团队将在一个工作日内回复。',
+    yourName: '您的姓名',
+    yourEmail: '您的邮箱',
+    yourNote: '留言（选填）',
+    sending: '正在发送…',
+    sent: '感谢您 — 您的咨询已送达我们的顾问团队，我们将在一个工作日内回复。',
+    errorMsg: '无法发送您的咨询，请直接发送邮件至：',
+    fileLabel: '附上图纸 — PDF、DWG、DXF、STEP 或 ZIP（合计上限 10 MB）',
   },
 };
 
@@ -614,6 +615,43 @@ const DICTIONARIES: Record<Language, ContentDictionary> = {
   zh: DICTIONARY_ZH,
 };
 
+const FIELD_CLS = 'w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white';
+
+type Sender = { name: string; email: string; note: string };
+
+function SenderFields({ t, value, onChange }: { t: ContentDictionary; value: Sender; onChange: (v: Sender) => void }) {
+  return (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs text-slate-300 mb-1">{t.contact.yourName}</label>
+          <input type="text" required value={value.name} onChange={(e) => onChange({ ...value, name: e.target.value })} className={FIELD_CLS} />
+        </div>
+        <div>
+          <label className="block text-xs text-slate-300 mb-1">{t.contact.yourEmail}</label>
+          <input type="email" required value={value.email} onChange={(e) => onChange({ ...value, email: e.target.value })} className={FIELD_CLS} />
+        </div>
+      </div>
+      <div>
+        <label className="block text-xs text-slate-300 mb-1">{t.contact.yourNote}</label>
+        <textarea rows={3} value={value.note} onChange={(e) => onChange({ ...value, note: e.target.value })} className={FIELD_CLS} />
+      </div>
+    </>
+  );
+}
+
+function InquiryStatus({ t, status }: { t: ContentDictionary; status: FormStatus }) {
+  if (status === 'idle') return null;
+  if (status === 'sending') return <p className="text-xs text-slate-400 text-center">{t.contact.sending}</p>;
+  if (status === 'sent') return <p className="text-sm text-emerald-400 text-center font-medium">{t.contact.sent}</p>;
+  return (
+    <p className="text-sm text-rose-400 text-center">
+      {t.contact.errorMsg}{' '}
+      <a href={`mailto:${CONTACT_EMAIL}`} className="underline font-mono">{CONTACT_EMAIL}</a>
+    </p>
+  );
+}
+
 export default function MacanGlobalPlatform() {
   const [lang, setLang] = useState<Language>('en');
   const [activePage, setActivePage] = useState<PageView>('index');
@@ -621,29 +659,52 @@ export default function MacanGlobalPlatform() {
   const [selectedNode, setSelectedNode] = useState<'muscat' | 'sohar' | 'duqm' | 'ningbo' | 'shenzhen'>('muscat');
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  // Inquiry form inputs (submitted via the visitor's email client)
+  // Inquiry form inputs
   const [calcPillar, setCalcPillar] = useState<'capital' | 'industrial' | 'logistics'>('capital');
   const [calcLocation, setCalcLocation] = useState<string>('Sohar Freezone');
   const [calcValue, setCalcValue] = useState<number>(50);
+  const [feasStatus, setFeasStatus] = useState<FormStatus>('idle');
 
   const [freightType, setFreightType] = useState<string>('40ft High Cube Container');
   const [freightQty, setFreightQty] = useState<number>(5);
+  const [freightStatus, setFreightStatus] = useState<FormStatus>('idle');
 
   const [industrialForm, setIndustrialForm] = useState({ project: '', land: '', zone: 'Sohar Freezone' });
+  const [industrialFiles, setIndustrialFiles] = useState<FileList | null>(null);
+  const [industrialStatus, setIndustrialStatus] = useState<FormStatus>('idle');
+
+  // Sender identity, shared across the inquiry forms
+  const [sender, setSender] = useState({ name: '', email: '', note: '' });
 
   const t = DICTIONARIES[lang];
 
-  // Build a mailto: link and hand off to the visitor's email client.
-  const sendEmail = (subject: string, fields: Record<string, string | number>) => {
-    const body =
-      Object.entries(fields)
-        .filter(([, v]) => v !== '' && v !== undefined && v !== null)
-        .map(([k, v]) => `${k}: ${v}`)
-        .join('\n') +
-      `\n\n— Sent from the Macan Group website`;
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
+  // Keep the document language / direction in sync with the selected locale.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = t.dir;
+  }, [lang, t.dir]);
+
+  // Post an inquiry to the cPanel PHP handler (sends mail from contact@macanco.com).
+  const submitInquiry = async (
+    subject: string,
+    fields: Record<string, string | number>,
+    files: FileList | null,
+    setStatus: (s: FormStatus) => void,
+  ) => {
+    setStatus('sending');
+    try {
+      const fd = new FormData();
+      fd.append('_subject', subject);
+      fd.append('_lang', lang);
+      fd.append('company_website', ''); // honeypot — real users leave it empty
+      Object.entries(fields).forEach(([k, v]) => fd.append(k, String(v)));
+      if (files) Array.from(files).forEach((f) => fd.append('attachments[]', f));
+      const res = await fetch('/sendmail.php', { method: 'POST', body: fd });
+      const json = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+      setStatus(json?.ok ? 'sent' : 'error');
+    } catch {
+      setStatus('error');
+    }
   };
 
   const goToPage = (page: PageView) => {
@@ -1057,11 +1118,9 @@ export default function MacanGlobalPlatform() {
                 {t.capitalPage.spotlightStatus}
               </div>
               <a
-                href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-                  'Investment Prospectus Request — ' + t.capitalPage.spotlightProject
-                )}&body=${encodeURIComponent(
-                  'Please send the investment prospectus for: ' + t.capitalPage.spotlightProject + '\n\nName:\nCompany:\nCountry:'
-                )}`}
+                href="/downloads/macan-group-prospectus.html"
+                target="_blank"
+                rel="noopener"
                 className="inline-flex px-6 py-3 bg-[#D4AF37] text-[#0A192F] font-bold rounded hover:opacity-90 text-sm"
               >
                 {t.capitalPage.ctaProspectus}
@@ -1105,60 +1164,84 @@ export default function MacanGlobalPlatform() {
             {/* Industrial Spec Enquiry Form */}
             <div className="bg-[#1E293B] p-8 rounded-xl border border-[#D4AF37]/30 max-w-3xl mx-auto space-y-6">
               <h2 className="text-2xl font-bold text-white text-center">{t.industrialPage.formTitle}</h2>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendEmail('Industrial Project Enquiry — ' + (industrialForm.project || 'Untitled'), {
-                    [t.industrialPage.formProjectLabel]: industrialForm.project,
-                    [t.industrialPage.formLandLabel]: industrialForm.land,
-                    [t.industrialPage.formFreezoneLabel]: industrialForm.zone,
-                  });
-                }}
-                className="space-y-4"
-              >
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formProjectLabel}</label>
-                  <input
-                    type="text"
-                    required
-                    value={industrialForm.project}
-                    onChange={(e) => setIndustrialForm((f) => ({ ...f, project: e.target.value }))}
-                    placeholder="e.g. Steel Pipe Fabrication Plant"
-                    className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
-                  />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {industrialStatus === 'sent' ? (
+                <InquiryStatus t={t} status={industrialStatus} />
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    submitInquiry(
+                      'Industrial Project Enquiry — ' + (industrialForm.project || 'Untitled'),
+                      {
+                        Name: sender.name,
+                        Email: sender.email,
+                        [t.industrialPage.formProjectLabel]: industrialForm.project,
+                        [t.industrialPage.formLandLabel]: industrialForm.land,
+                        [t.industrialPage.formFreezoneLabel]: industrialForm.zone,
+                        Message: sender.note,
+                      },
+                      industrialFiles,
+                      setIndustrialStatus,
+                    );
+                  }}
+                  className="space-y-4"
+                >
+                  <SenderFields t={t} value={sender} onChange={setSender} />
                   <div>
-                    <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formLandLabel}</label>
+                    <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formProjectLabel}</label>
                     <input
-                      type="number"
-                      value={industrialForm.land}
-                      onChange={(e) => setIndustrialForm((f) => ({ ...f, land: e.target.value }))}
-                      placeholder="50000"
-                      className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
+                      type="text"
+                      required
+                      value={industrialForm.project}
+                      onChange={(e) => setIndustrialForm((f) => ({ ...f, project: e.target.value }))}
+                      placeholder="e.g. Steel Pipe Fabrication Plant"
+                      className={FIELD_CLS}
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formFreezoneLabel}</label>
-                    <select
-                      value={industrialForm.zone}
-                      onChange={(e) => setIndustrialForm((f) => ({ ...f, zone: e.target.value }))}
-                      className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
-                    >
-                      <option>Sohar Freezone</option>
-                      <option>Duqm SEZ</option>
-                      <option>Salalah Freezone</option>
-                    </select>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formLandLabel}</label>
+                      <input
+                        type="number"
+                        value={industrialForm.land}
+                        onChange={(e) => setIndustrialForm((f) => ({ ...f, land: e.target.value }))}
+                        placeholder="50000"
+                        className={FIELD_CLS}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-slate-300 mb-1">{t.industrialPage.formFreezoneLabel}</label>
+                      <select
+                        value={industrialForm.zone}
+                        onChange={(e) => setIndustrialForm((f) => ({ ...f, zone: e.target.value }))}
+                        className={FIELD_CLS}
+                      >
+                        <option>Sohar Freezone</option>
+                        <option>Duqm SEZ</option>
+                        <option>Salalah Freezone</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <p className="border border-dashed border-[#334155] p-4 rounded text-xs text-slate-400 font-mono">
-                  {t.industrialPage.formUploadBtn}
-                </p>
-                <button type="submit" className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold rounded text-sm">
-                  {t.industrialPage.formSubmitBtn}
-                </button>
-                <p className="text-[11px] text-slate-500 text-center">{t.contact.mailtoHint}</p>
-              </form>
+                  <div>
+                    <label className="block text-xs text-slate-300 mb-1">{t.contact.fileLabel}</label>
+                    <input
+                      type="file"
+                      multiple
+                      accept=".pdf,.dwg,.dxf,.step,.stp,.igs,.iges,.zip,.doc,.docx,.png,.jpg,.jpeg"
+                      onChange={(e) => setIndustrialFiles(e.target.files)}
+                      className="w-full text-xs text-slate-400 file:mr-3 file:rounded file:border-0 file:bg-[#334155] file:px-3 file:py-2 file:text-slate-100"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={industrialStatus === 'sending'}
+                    className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold rounded text-sm disabled:opacity-60"
+                  >
+                    {t.industrialPage.formSubmitBtn}
+                  </button>
+                  <InquiryStatus t={t} status={industrialStatus} />
+                </form>
+              )}
             </div>
           </div>
         </main>
@@ -1205,44 +1288,57 @@ export default function MacanGlobalPlatform() {
                 <h2 className="text-2xl font-bold text-white">{t.tradePage.calcTitle}</h2>
                 <p className="mt-2 text-sm text-slate-400">{t.contact.quoteSub}</p>
               </div>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendEmail('Ocean Freight Quote Request', {
-                    [t.tradePage.calcContainerType]: freightType,
-                    [t.tradePage.calcWeight]: freightQty,
-                  });
-                }}
-                className="space-y-4"
-              >
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">{t.tradePage.calcContainerType}</label>
-                  <select
-                    value={freightType}
-                    onChange={(e) => setFreightType(e.target.value)}
-                    className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
+              {freightStatus === 'sent' ? (
+                <InquiryStatus t={t} status={freightStatus} />
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    submitInquiry(
+                      'Ocean Freight Quote Request',
+                      {
+                        Name: sender.name,
+                        Email: sender.email,
+                        [t.tradePage.calcContainerType]: freightType,
+                        [t.tradePage.calcWeight]: freightQty,
+                        Message: sender.note,
+                      },
+                      null,
+                      setFreightStatus,
+                    );
+                  }}
+                  className="space-y-4"
+                >
+                  <SenderFields t={t} value={sender} onChange={setSender} />
+                  <div>
+                    <label className="block text-xs text-slate-300 mb-1">{t.tradePage.calcContainerType}</label>
+                    <select value={freightType} onChange={(e) => setFreightType(e.target.value)} className={FIELD_CLS}>
+                      <option value="40ft High Cube Container">40ft High Cube Dry Container (FCL)</option>
+                      <option value="20ft Standard Container">20ft Standard Dry Container (FCL)</option>
+                      <option value="Breakbulk Heavy Machinery">Heavy Machinery Breakbulk / Open Top</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-slate-300 mb-1">{t.tradePage.calcWeight}</label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="500"
+                      value={freightQty}
+                      onChange={(e) => setFreightQty(Number(e.target.value))}
+                      className={FIELD_CLS}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={freightStatus === 'sending'}
+                    className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold rounded text-sm disabled:opacity-60"
                   >
-                    <option value="40ft High Cube Container">40ft High Cube Dry Container (FCL)</option>
-                    <option value="20ft Standard Container">20ft Standard Dry Container (FCL)</option>
-                    <option value="Breakbulk Heavy Machinery">Heavy Machinery Breakbulk / Open Top</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">{t.tradePage.calcWeight}</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="500"
-                    value={freightQty}
-                    onChange={(e) => setFreightQty(Number(e.target.value))}
-                    className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
-                  />
-                </div>
-                <button type="submit" className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold rounded text-sm">
-                  {t.tradePage.calcEstimateBtn}
-                </button>
-                <p className="text-[11px] text-slate-500 text-center">{t.contact.mailtoHint}</p>
-              </form>
+                    {t.tradePage.calcEstimateBtn}
+                  </button>
+                  <InquiryStatus t={t} status={freightStatus} />
+                </form>
+              )}
             </div>
           </div>
         </main>
@@ -1256,66 +1352,78 @@ export default function MacanGlobalPlatform() {
             <p className="mt-3 text-sm text-slate-400">{t.calculator.sub}</p>
           </div>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              sendEmail('Corridor Feasibility Enquiry', {
-                [t.calculator.typeLabel]: t.calculator.typeOptions[calcPillar],
-                [t.calculator.locationLabel]: calcLocation,
-                [t.calculator.metricLabel]: `${calcValue}`,
-              });
-            }}
-            className="bg-[#1E293B] p-8 rounded-xl border border-[#334155] space-y-6"
-          >
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-2">{t.calculator.typeLabel}</label>
-              <select
-                value={calcPillar}
-                onChange={(e) => setCalcPillar(e.target.value as 'capital' | 'industrial' | 'logistics')}
-                className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
-              >
-                <option value="capital">{t.calculator.typeOptions.capital}</option>
-                <option value="industrial">{t.calculator.typeOptions.industrial}</option>
-                <option value="logistics">{t.calculator.typeOptions.logistics}</option>
-              </select>
+          {feasStatus === 'sent' ? (
+            <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+              <InquiryStatus t={t} status={feasStatus} />
             </div>
-
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-2">{t.calculator.locationLabel}</label>
-              <select
-                value={calcLocation}
-                onChange={(e) => setCalcLocation(e.target.value)}
-                className="w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white"
-              >
-                <option value="Sohar Freezone">Sohar Freezone (Industrial Port)</option>
-                <option value="Duqm SEZ">Duqm Special Economic Zone (Deepwater Hub)</option>
-                <option value="Salalah Freezone">Salalah Freezone (Southern GCC Corridor)</option>
-              </select>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs text-slate-300 mb-2">
-                <span>{t.calculator.metricLabel}</span>
-                <span className="text-[#D4AF37] font-bold font-mono">{calcValue} Units / $M</span>
-              </div>
-              <input
-                type="range"
-                min="10"
-                max="500"
-                value={calcValue}
-                onChange={(e) => setCalcValue(Number(e.target.value))}
-                className="w-full accent-[#D4AF37] cursor-pointer"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3.5 rounded bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold text-sm hover:opacity-95 transition-opacity shadow-lg"
+          ) : (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                submitInquiry(
+                  'Corridor Feasibility Enquiry',
+                  {
+                    Name: sender.name,
+                    Email: sender.email,
+                    [t.calculator.typeLabel]: t.calculator.typeOptions[calcPillar],
+                    [t.calculator.locationLabel]: calcLocation,
+                    [t.calculator.metricLabel]: `${calcValue}`,
+                    Message: sender.note,
+                  },
+                  null,
+                  setFeasStatus,
+                );
+              }}
+              className="bg-[#1E293B] p-8 rounded-xl border border-[#334155] space-y-6"
             >
-              {t.calculator.calculateBtn}
-            </button>
-            <p className="text-[11px] text-slate-500 text-center">{t.contact.mailtoHint}</p>
-          </form>
+              <SenderFields t={t} value={sender} onChange={setSender} />
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-2">{t.calculator.typeLabel}</label>
+                <select
+                  value={calcPillar}
+                  onChange={(e) => setCalcPillar(e.target.value as 'capital' | 'industrial' | 'logistics')}
+                  className={FIELD_CLS}
+                >
+                  <option value="capital">{t.calculator.typeOptions.capital}</option>
+                  <option value="industrial">{t.calculator.typeOptions.industrial}</option>
+                  <option value="logistics">{t.calculator.typeOptions.logistics}</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-2">{t.calculator.locationLabel}</label>
+                <select value={calcLocation} onChange={(e) => setCalcLocation(e.target.value)} className={FIELD_CLS}>
+                  <option value="Sohar Freezone">Sohar Freezone (Industrial Port)</option>
+                  <option value="Duqm SEZ">Duqm Special Economic Zone (Deepwater Hub)</option>
+                  <option value="Salalah Freezone">Salalah Freezone (Southern GCC Corridor)</option>
+                </select>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs text-slate-300 mb-2">
+                  <span>{t.calculator.metricLabel}</span>
+                  <span className="text-[#D4AF37] font-bold font-mono">{calcValue} Units / $M</span>
+                </div>
+                <input
+                  type="range"
+                  min="10"
+                  max="500"
+                  value={calcValue}
+                  onChange={(e) => setCalcValue(Number(e.target.value))}
+                  className="w-full accent-[#D4AF37] cursor-pointer"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={feasStatus === 'sending'}
+                className="w-full py-3.5 rounded bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#0A192F] font-bold text-sm hover:opacity-95 transition-opacity shadow-lg disabled:opacity-60"
+              >
+                {t.calculator.calculateBtn}
+              </button>
+              <InquiryStatus t={t} status={feasStatus} />
+            </form>
+          )}
         </div>
       </section>
 
