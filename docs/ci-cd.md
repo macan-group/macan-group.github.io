@@ -54,12 +54,15 @@ Variables:
 Environments → New environment** `production`, add yourself as a required
 reviewer, then uncomment `environment: production` in `deploy.yml`.
 
-### 3. Local deploy (optional)
+### 3. Local deploy (works without CI / without live DNS)
 ```bash
 brew install lftp
 cp scripts/deploy.env.example scripts/deploy.env   # then edit
 npm run deploy
 ```
+`FTP_HOST` can be the cPanel **server hostname or IP** (see the URL in cPanel,
+or Server Information) — you don't need the domain's DNS working. Set
+`DEPLOY_PROTOCOL=sftp` in `scripts/deploy.env` if FTP port 21 is blocked.
 
 ### 4. Branch protection (optional but recommended)
 **Settings → Branches → add rule** for `main`: require the **CI / verify**
