@@ -14,9 +14,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  # Skip (neutral, not failed) until the FTP secrets are configured.
+  guard:
     runs-on: ubuntu-latest
-    environment: production
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          if [ -n "$FTP_SERVER" ] && [ -n "$FTP_PASSWORD" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::FTP secrets not set — deploy skipped. See docs/ci-cd.md."
+          fi
+
+  deploy:
+    needs: guard
+    if: needs.guard.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    # To require manual approval before each deploy: create an Environment named
+    # "production" in repo Settings with a required reviewer, then uncomment:
+    # environment: production
     steps:
       - uses: actions/checkout@v4
 

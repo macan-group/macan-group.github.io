@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run build",
     "package": "rm -f macan-site.zip && (cd out && zip -qr ../macan-site.zip . -x '__next*' '*/__next*')",
     "deploy": "bash scripts/deploy.sh"

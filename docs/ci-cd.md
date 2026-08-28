@@ -50,8 +50,9 @@ Variables:
 
 (Non-standard FTP port? Add `port:` under `with:` in `deploy.yml`.)
 
-**Settings → Environments → `production`** — create it. Optionally add a
-required reviewer so deploys wait for your approval, and restrict it to `main`.
+*(Optional)* To make each deploy wait for your approval: **Settings →
+Environments → New environment** `production`, add yourself as a required
+reviewer, then uncomment `environment: production` in `deploy.yml`.
 
 ### 3. Local deploy (optional)
 ```bash
