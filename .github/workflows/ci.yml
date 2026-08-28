@@ -40,7 +40,7 @@ jobs:
           php -l public/sendmail.php
 
       - name: Upload static site
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: static-site
           path: out/
