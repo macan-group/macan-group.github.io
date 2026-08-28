@@ -65,6 +65,17 @@ npm run deploy
 **Settings → Branches → add rule** for `main`: require the **CI / verify**
 check to pass before merging.
 
+### 5. Point GitHub Pages at the redirect branch
+The repo is named `*.github.io`, so GitHub **won't let Pages be disabled**. A
+`gh-pages` branch containing only a redirect to `https://macanco.com` is already
+pushed. Switch to it so `main` pushes stop triggering broken Pages builds:
+
+**Settings → Pages → Build and deployment → Source: Deploy from a branch →
+Branch: `gh-pages` / `/ (root)` → Save.**
+
+(Or rename the repo to e.g. `macanco-website` — then Pages becomes an ordinary
+project site you can turn off, and update the git remote URL.)
+
 ---
 
 ## Notes
