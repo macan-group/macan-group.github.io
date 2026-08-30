@@ -615,7 +615,8 @@ const DICTIONARIES: Record<Language, ContentDictionary> = {
   zh: DICTIONARY_ZH,
 };
 
-const FIELD_CLS = 'w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-sm text-white';
+// text-base on mobile (>=16px) stops iOS from zooming in on focus.
+const FIELD_CLS = 'w-full bg-[#0A192F] border border-[#334155] rounded px-4 py-2.5 text-base sm:text-sm text-white';
 
 type Sender = { name: string; email: string; note: string };
 
@@ -714,35 +715,35 @@ export default function MacanGlobalPlatform() {
   };
 
   return (
-    <div className={`min-h-screen bg-[#0A192F] text-slate-100 font-sans selection:bg-[#D4AF37] selection:text-[#0A192F] ${t.dir === 'rtl' ? 'rtl' : 'ltr'}`} dir={t.dir}>
+    <div className={`min-h-screen overflow-x-hidden bg-[#0A192F] text-slate-100 font-sans selection:bg-[#D4AF37] selection:text-[#0A192F] ${t.dir === 'rtl' ? 'rtl' : 'ltr'}`} dir={t.dir}>
       
       {}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0A192F]/90 border-b border-[#D4AF37]/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
 
           {/* Logo Branding */}
           <button
             type="button"
             onClick={() => goToPage('index')}
-            className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer group text-start"
+            className="flex min-w-0 items-center space-x-2 sm:space-x-3 rtl:space-x-reverse cursor-pointer group text-start"
           >
-            <div className="w-10 h-10 rounded bg-gradient-to-br from-[#D4AF37] to-[#AA7C11] p-0.5 flex items-center justify-center shadow-lg shadow-[#D4AF37]/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#0A192F] rounded-sm flex items-center justify-center font-bold text-[#D4AF37] text-xl">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded bg-gradient-to-br from-[#D4AF37] to-[#AA7C11] p-0.5 flex items-center justify-center shadow-lg shadow-[#D4AF37]/20 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-[#0A192F] rounded-sm flex items-center justify-center font-bold text-[#D4AF37] text-lg sm:text-xl">
                 M
               </div>
             </div>
-            <div>
-              <div className="font-extrabold tracking-wider text-lg text-slate-100">
+            <div className="min-w-0">
+              <div className="font-extrabold tracking-wide sm:tracking-wider text-base sm:text-lg text-slate-100 whitespace-nowrap">
                 MACAN <span className="text-[#D4AF37]">GROUP</span>
               </div>
-              <div className="text-[10px] text-slate-400 tracking-widest uppercase">
+              <div className="hidden sm:block text-[10px] text-slate-400 tracking-widest uppercase truncate">
                 {t.nav.subBrand}
               </div>
             </div>
           </button>
 
           {/* Desktop Page Navigation Router */}
-          <nav className="hidden md:flex items-center space-x-8 rtl:space-x-reverse text-sm font-medium text-slate-300">
+          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8 rtl:space-x-reverse text-sm font-medium text-slate-300">
             {(['index', 'capital', 'industrial', 'trade'] as const).map((page) => (
               <button
                 key={page}
@@ -755,23 +756,23 @@ export default function MacanGlobalPlatform() {
           </nav>
 
           {/* Language Switcher & Action CTA */}
-          <div className="flex items-center space-x-3 sm:space-x-4 rtl:space-x-reverse">
-            <div className="flex bg-[#1E293B] border border-[#334155] rounded-md p-1 text-xs">
+          <div className="flex shrink-0 items-center space-x-2 sm:space-x-4 rtl:space-x-reverse">
+            <div className="flex bg-[#1E293B] border border-[#334155] rounded-md p-0.5 sm:p-1 text-[11px] sm:text-xs">
               <button
                 onClick={() => setLang('en')}
-                className={`px-2.5 py-1 rounded transition-colors ${lang === 'en' ? 'bg-[#D4AF37] text-[#0A192F] font-bold' : 'text-slate-400 hover:text-white'}`}
+                className={`px-1.5 sm:px-2.5 py-1 rounded transition-colors ${lang === 'en' ? 'bg-[#D4AF37] text-[#0A192F] font-bold' : 'text-slate-400 hover:text-white'}`}
               >
                 EN
               </button>
               <button
                 onClick={() => setLang('ar')}
-                className={`px-2.5 py-1 rounded transition-colors ${lang === 'ar' ? 'bg-[#D4AF37] text-[#0A192F] font-bold' : 'text-slate-400 hover:text-white'}`}
+                className={`px-1.5 sm:px-2.5 py-1 rounded transition-colors ${lang === 'ar' ? 'bg-[#D4AF37] text-[#0A192F] font-bold' : 'text-slate-400 hover:text-white'}`}
               >
-                العربية
+                عربي
               </button>
               <button
                 onClick={() => setLang('zh')}
-                className={`px-2.5 py-1 rounded transition-colors ${lang === 'zh' ? 'bg-[#D4AF37] text-[#0A192F] font-bold' : 'text-slate-400 hover:text-white'}`}
+                className={`px-1.5 sm:px-2.5 py-1 rounded transition-colors ${lang === 'zh' ? 'bg-[#D4AF37] text-[#0A192F] font-bold' : 'text-slate-400 hover:text-white'}`}
               >
                 中文
               </button>
@@ -790,7 +791,7 @@ export default function MacanGlobalPlatform() {
               aria-label="Menu"
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((v) => !v)}
-              className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded border border-[#334155] text-slate-200"
+              className="lg:hidden inline-flex items-center justify-center w-9 h-9 rounded border border-[#334155] text-slate-200"
             >
               {mobileMenuOpen ? '✕' : '☰'}
             </button>
@@ -799,7 +800,7 @@ export default function MacanGlobalPlatform() {
 
         {/* Mobile navigation panel */}
         {mobileMenuOpen && (
-          <nav className="md:hidden border-t border-[#D4AF37]/20 bg-[#0A192F] px-4 py-3 space-y-1">
+          <nav className="lg:hidden border-t border-[#D4AF37]/20 bg-[#0A192F] px-4 py-3 space-y-1">
             {(['index', 'capital', 'industrial', 'trade'] as const).map((page) => (
               <button
                 key={page}
@@ -841,7 +842,7 @@ export default function MacanGlobalPlatform() {
       {activePage === 'index' && (
         <main>
           {}
-          <section className="relative pt-20 pb-24 overflow-hidden">
+          <section className="relative pt-14 pb-16 sm:pt-20 sm:pb-24 overflow-hidden">
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#D4AF37]/10 blur-[140px] rounded-full pointer-events-none" />
             <div className="absolute top-1/3 right-10 w-[300px] h-[300px] bg-[#0D3B36]/30 blur-[100px] rounded-full pointer-events-none" />
 
@@ -850,14 +851,14 @@ export default function MacanGlobalPlatform() {
                 <span className="font-medium tracking-wide">{t.hero.badge}</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight max-w-4xl mx-auto leading-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight max-w-4xl mx-auto leading-tight">
                 {t.hero.titleMain}: <br className="hidden sm:inline" />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#D4AF37]">
                   {t.hero.titleHighlight}
                 </span>
               </h1>
 
-              <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-normal">
+              <p className="mt-6 text-base sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-normal">
                 {t.hero.subhead}
               </p>
 
@@ -884,9 +885,9 @@ export default function MacanGlobalPlatform() {
           </section>
 
           {}
-          <section className="py-20 bg-[#0A192F]/60 border-t border-[#1E293B]">
+          <section className="py-14 sm:py-20 bg-[#0A192F]/60 border-t border-[#1E293B]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center max-w-3xl mx-auto mb-16">
+              <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
                 <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
                   {t.pillars.title}
                 </h2>
@@ -895,36 +896,27 @@ export default function MacanGlobalPlatform() {
                 </p>
               </div>
 
-              <div className="flex justify-center mb-12">
-                <div className="inline-flex p-1 bg-[#1E293B] rounded-lg border border-[#334155]">
-                  <button
-                    onClick={() => setActivePillar('capital')}
-                    className={`px-5 py-2.5 rounded-md text-sm font-semibold transition-all ${
-                      activePillar === 'capital' ? 'bg-[#D4AF37] text-[#0A192F] shadow' : 'text-slate-300 hover:text-white'
-                    }`}
-                  >
-                    Macan Capital
-                  </button>
-                  <button
-                    onClick={() => setActivePillar('industrial')}
-                    className={`px-5 py-2.5 rounded-md text-sm font-semibold transition-all ${
-                      activePillar === 'industrial' ? 'bg-[#D4AF37] text-[#0A192F] shadow' : 'text-slate-300 hover:text-white'
-                    }`}
-                  >
-                    Macan Industrial
-                  </button>
-                  <button
-                    onClick={() => setActivePillar('trade')}
-                    className={`px-5 py-2.5 rounded-md text-sm font-semibold transition-all ${
-                      activePillar === 'trade' ? 'bg-[#D4AF37] text-[#0A192F] shadow' : 'text-slate-300 hover:text-white'
-                    }`}
-                  >
-                    Trade Corridor
-                  </button>
+              <div className="flex justify-center mb-10 sm:mb-12">
+                <div className="grid w-full max-w-md grid-cols-3 gap-1 p-1 bg-[#1E293B] rounded-lg border border-[#334155] sm:inline-flex sm:w-auto sm:max-w-none sm:gap-0">
+                  {([
+                    ['capital', 'Macan Capital'],
+                    ['industrial', 'Macan Industrial'],
+                    ['trade', 'Trade Corridor'],
+                  ] as const).map(([key, label]) => (
+                    <button
+                      key={key}
+                      onClick={() => setActivePillar(key)}
+                      className={`px-2 sm:px-5 py-2.5 rounded-md text-xs sm:text-sm font-semibold text-center transition-all ${
+                        activePillar === key ? 'bg-[#D4AF37] text-[#0A192F] shadow' : 'text-slate-300 hover:text-white'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <div className="bg-[#1E293B]/80 rounded-xl border border-[#D4AF37]/30 p-8 lg:p-12 shadow-2xl relative overflow-hidden">
+              <div className="bg-[#1E293B]/80 rounded-xl border border-[#D4AF37]/30 p-5 sm:p-8 lg:p-12 shadow-2xl relative overflow-hidden">
                 {activePillar === 'capital' && (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <div>
@@ -947,9 +939,9 @@ export default function MacanGlobalPlatform() {
                     </div>
                     <div className="bg-[#0A192F] p-6 rounded-lg border border-[#334155] font-mono text-xs text-slate-300 space-y-4">
                       <div className="text-[#D4AF37] font-bold border-b border-[#334155] pb-2">[ CAPITAL FEASIBILITY METRICS ]</div>
-                      <div className="flex justify-between"><span>Oman Freezone Corporate Tax:</span><span className="text-emerald-400 font-bold">0% (Up to 25 Yrs)</span></div>
-                      <div className="flex justify-between"><span>Foreign Equity Allowed:</span><span className="text-emerald-400 font-bold">100% Ownership</span></div>
-                      <div className="flex justify-between"><span>Capital Repatriation Tax:</span><span className="text-emerald-400 font-bold">0% Restrictive Barrier</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Oman Freezone Corporate Tax:</span><span className="text-emerald-400 font-bold">0% (Up to 25 Yrs)</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Foreign Equity Allowed:</span><span className="text-emerald-400 font-bold">100% Ownership</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Capital Repatriation Tax:</span><span className="text-emerald-400 font-bold">0% Restrictive Barrier</span></div>
                     </div>
                   </div>
                 )}
@@ -976,9 +968,9 @@ export default function MacanGlobalPlatform() {
                     </div>
                     <div className="bg-[#0A192F] p-6 rounded-lg border border-[#334155] font-mono text-xs text-slate-300 space-y-4">
                       <div className="text-[#D4AF37] font-bold border-b border-[#334155] pb-2">[ INDUSTRIAL PLANT SPECS ]</div>
-                      <div className="flex justify-between"><span>Key Industrial Zones:</span><span className="text-white">Sohar Port & Duqm SEZ</span></div>
-                      <div className="flex justify-between"><span>Customs Duties on Plant Machinery:</span><span className="text-emerald-400 font-bold">0% Duty Exempt</span></div>
-                      <div className="flex justify-between"><span>Industrial Power Rates:</span><span className="text-emerald-400 font-bold">Subsidized Tier</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Key Industrial Zones:</span><span className="text-white">Sohar Port & Duqm SEZ</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Customs Duties on Plant Machinery:</span><span className="text-emerald-400 font-bold">0% Duty Exempt</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Industrial Power Rates:</span><span className="text-emerald-400 font-bold">Subsidized Tier</span></div>
                     </div>
                   </div>
                 )}
@@ -1005,9 +997,9 @@ export default function MacanGlobalPlatform() {
                     </div>
                     <div className="bg-[#0A192F] p-6 rounded-lg border border-[#334155] font-mono text-xs text-slate-300 space-y-4">
                       <div className="text-[#D4AF37] font-bold border-b border-[#334155] pb-2">[ FREIGHT CORRIDOR SPECS ]</div>
-                      <div className="flex justify-between"><span>Ningbo to Sohar Transit:</span><span className="text-emerald-400 font-bold">12 - 14 Days Direct</span></div>
-                      <div className="flex justify-between"><span>Strait of Hormuz Avoidance:</span><span className="text-emerald-400 font-bold">100% Non-Hormuz Port Access</span></div>
-                      <div className="flex justify-between"><span>Cargo Capabilities:</span><span className="text-white">FCL, LCL, Heavy Breakbulk</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Ningbo to Sohar Transit:</span><span className="text-emerald-400 font-bold">12 - 14 Days Direct</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Strait of Hormuz Avoidance:</span><span className="text-emerald-400 font-bold">100% Non-Hormuz Port Access</span></div>
+                      <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-3"><span>Cargo Capabilities:</span><span className="text-white">FCL, LCL, Heavy Breakbulk</span></div>
                     </div>
                   </div>
                 )}
@@ -1016,25 +1008,25 @@ export default function MacanGlobalPlatform() {
           </section>
 
           {}
-          <section className="py-20 bg-[#0A192F]">
+          <section className="py-14 sm:py-20 bg-[#0A192F]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center max-w-3xl mx-auto mb-16">
+              <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
                 <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{t.advantages.title}</h2>
                 <p className="mt-4 text-base text-slate-400">{t.advantages.sub}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="bg-[#1E293B]/60 border border-[#334155] p-8 rounded-lg">
+                <div className="bg-[#1E293B]/60 border border-[#334155] p-6 sm:p-8 rounded-lg">
                   <div className="w-12 h-12 rounded bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] font-bold text-xl mb-6">0%</div>
                   <h3 className="text-xl font-bold text-white mb-3">{t.advantages.item1Title}</h3>
                   <p className="text-sm text-slate-300 leading-relaxed">{t.advantages.item1Desc}</p>
                 </div>
-                <div className="bg-[#1E293B]/60 border border-[#334155] p-8 rounded-lg">
+                <div className="bg-[#1E293B]/60 border border-[#334155] p-6 sm:p-8 rounded-lg">
                   <div className="w-12 h-12 rounded bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] font-bold text-xl mb-6">100%</div>
                   <h3 className="text-xl font-bold text-white mb-3">{t.advantages.item2Title}</h3>
                   <p className="text-sm text-slate-300 leading-relaxed">{t.advantages.item2Desc}</p>
                 </div>
-                <div className="bg-[#1E293B]/60 border border-[#334155] p-8 rounded-lg">
+                <div className="bg-[#1E293B]/60 border border-[#334155] p-6 sm:p-8 rounded-lg">
                   <div className="w-12 h-12 rounded bg-[#0D3B36] flex items-center justify-center text-emerald-400 font-bold text-xl mb-6">⚓</div>
                   <h3 className="text-xl font-bold text-white mb-3">{t.advantages.item3Title}</h3>
                   <p className="text-sm text-slate-300 leading-relaxed">{t.advantages.item3Desc}</p>
@@ -1044,9 +1036,9 @@ export default function MacanGlobalPlatform() {
           </section>
 
           {}
-          <section className="py-20 bg-[#0D3B36]/30 border-y border-[#D4AF37]/20">
+          <section className="py-14 sm:py-20 bg-[#0D3B36]/30 border-y border-[#D4AF37]/20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center max-w-3xl mx-auto mb-16">
+              <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
                 <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{t.corridor.title}</h2>
                 <p className="mt-4 text-base text-slate-400">{t.corridor.sub}</p>
               </div>
@@ -1067,7 +1059,7 @@ export default function MacanGlobalPlatform() {
                 ))}
               </div>
 
-              <div className="bg-[#0A192F] p-8 rounded-xl border border-[#D4AF37]/40 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="bg-[#0A192F] p-6 sm:p-8 rounded-xl border border-[#D4AF37]/40 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
                   <span className="text-xs font-mono text-[#D4AF37] tracking-widest uppercase">{t.corridor.nodes[selectedNode].role}</span>
                   <h3 className="text-2xl font-bold text-white mt-2">{t.corridor.nodes[selectedNode].title}</h3>
@@ -1085,8 +1077,8 @@ export default function MacanGlobalPlatform() {
 
       {}
       {activePage === 'capital' && (
-        <main className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <main className="py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16">
             <div className="text-center max-w-3xl mx-auto">
               <span className="text-xs font-mono text-[#D4AF37] tracking-widest uppercase bg-[#D4AF37]/10 px-3 py-1 rounded">
                 MACAN CAPITAL & FDI HUB
@@ -1096,21 +1088,21 @@ export default function MacanGlobalPlatform() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+              <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155]">
                 <h3 className="text-xl font-bold text-[#D4AF37] mb-3">{t.capitalPage.service1Title}</h3>
                 <p className="text-sm text-slate-300 leading-relaxed">{t.capitalPage.service1Desc}</p>
               </div>
-              <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+              <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155]">
                 <h3 className="text-xl font-bold text-[#D4AF37] mb-3">{t.capitalPage.service2Title}</h3>
                 <p className="text-sm text-slate-300 leading-relaxed">{t.capitalPage.service2Desc}</p>
               </div>
-              <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+              <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155]">
                 <h3 className="text-xl font-bold text-[#D4AF37] mb-3">{t.capitalPage.service3Title}</h3>
                 <p className="text-sm text-slate-300 leading-relaxed">{t.capitalPage.service3Desc}</p>
               </div>
             </div>
 
-            <div className="bg-[#0D3B36]/40 p-8 sm:p-12 rounded-2xl border border-[#D4AF37]/40 space-y-6">
+            <div className="bg-[#0D3B36]/40 p-6 sm:p-12 rounded-2xl border border-[#D4AF37]/40 space-y-6">
               <span className="text-xs font-mono text-emerald-400 tracking-widest">{t.capitalPage.spotlightTitle}</span>
               <h2 className="text-2xl sm:text-3xl font-bold text-white">{t.capitalPage.spotlightProject}</h2>
               <p className="text-sm text-slate-300">{t.capitalPage.spotlightSector}</p>
@@ -1121,7 +1113,7 @@ export default function MacanGlobalPlatform() {
                 href="/downloads/macan-group-prospectus.html"
                 target="_blank"
                 rel="noopener"
-                className="inline-flex px-6 py-3 bg-[#D4AF37] text-[#0A192F] font-bold rounded hover:opacity-90 text-sm"
+                className="inline-flex w-full sm:w-auto justify-center px-6 py-3 bg-[#D4AF37] text-[#0A192F] font-bold rounded hover:opacity-90 text-sm"
               >
                 {t.capitalPage.ctaProspectus}
               </a>
@@ -1132,8 +1124,8 @@ export default function MacanGlobalPlatform() {
 
       {}
       {activePage === 'industrial' && (
-        <main className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <main className="py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16">
             <div className="text-center max-w-3xl mx-auto">
               <span className="text-xs font-mono text-[#D4AF37] tracking-widest uppercase bg-[#D4AF37]/10 px-3 py-1 rounded">
                 MACAN INDUSTRIAL & EPC ENGINEERING
@@ -1143,26 +1135,26 @@ export default function MacanGlobalPlatform() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+              <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155]">
                 <h3 className="text-lg font-bold text-white mb-2">{t.industrialPage.cap1Title}</h3>
                 <p className="text-sm text-slate-300">{t.industrialPage.cap1Desc}</p>
               </div>
-              <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+              <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155]">
                 <h3 className="text-lg font-bold text-white mb-2">{t.industrialPage.cap2Title}</h3>
                 <p className="text-sm text-slate-300">{t.industrialPage.cap2Desc}</p>
               </div>
-              <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+              <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155]">
                 <h3 className="text-lg font-bold text-white mb-2">{t.industrialPage.cap3Title}</h3>
                 <p className="text-sm text-slate-300">{t.industrialPage.cap3Desc}</p>
               </div>
-              <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+              <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155]">
                 <h3 className="text-lg font-bold text-white mb-2">{t.industrialPage.cap4Title}</h3>
                 <p className="text-sm text-slate-300">{t.industrialPage.cap4Desc}</p>
               </div>
             </div>
 
             {/* Industrial Spec Enquiry Form */}
-            <div className="bg-[#1E293B] p-8 rounded-xl border border-[#D4AF37]/30 max-w-3xl mx-auto space-y-6">
+            <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#D4AF37]/30 max-w-3xl mx-auto space-y-6">
               <h2 className="text-2xl font-bold text-white text-center">{t.industrialPage.formTitle}</h2>
               {industrialStatus === 'sent' ? (
                 <InquiryStatus t={t} status={industrialStatus} />
@@ -1249,8 +1241,8 @@ export default function MacanGlobalPlatform() {
 
       {}
       {activePage === 'trade' && (
-        <main className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <main className="py-12 sm:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16">
             <div className="text-center max-w-3xl mx-auto">
               <span className="text-xs font-mono text-[#D4AF37] tracking-widest uppercase bg-[#D4AF37]/10 px-3 py-1 rounded">
                 MACAN TRADE & LOGISTICS LINE
@@ -1260,9 +1252,9 @@ export default function MacanGlobalPlatform() {
             </div>
 
             {/* Direct Route Specs Card */}
-            <div className="bg-[#1E293B] p-8 rounded-xl border border-[#D4AF37]/30 space-y-6">
-              <h2 className="text-xl font-bold text-[#D4AF37] font-mono">{t.tradePage.routeTitle}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-mono text-xs">
+            <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#D4AF37]/30 space-y-6">
+              <h2 className="text-lg sm:text-xl font-bold text-[#D4AF37] font-mono break-words">{t.tradePage.routeTitle}</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 font-mono text-xs">
                 <div className="bg-[#0A192F] p-4 rounded border border-[#334155]">
                   <span className="text-slate-400 block">{t.tradePage.transitTimeLabel}</span>
                   <span className="text-emerald-400 font-bold text-base">12 - 14 Days Direct</span>
@@ -1283,7 +1275,7 @@ export default function MacanGlobalPlatform() {
             </div>
 
             {/* Ocean Freight Quote Request */}
-            <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155] max-w-3xl mx-auto space-y-6">
+            <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155] max-w-3xl mx-auto space-y-6">
               <div className="text-center">
                 <h2 className="text-2xl font-bold text-white">{t.tradePage.calcTitle}</h2>
                 <p className="mt-2 text-sm text-slate-400">{t.contact.quoteSub}</p>
@@ -1345,7 +1337,7 @@ export default function MacanGlobalPlatform() {
       )}
 
       {}
-      <section id="calculator" className="py-20 bg-[#0A192F] border-t border-[#1E293B]">
+      <section id="calculator" className="py-14 sm:py-20 bg-[#0A192F] border-t border-[#1E293B]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{t.calculator.title}</h2>
@@ -1353,7 +1345,7 @@ export default function MacanGlobalPlatform() {
           </div>
 
           {feasStatus === 'sent' ? (
-            <div className="bg-[#1E293B] p-8 rounded-xl border border-[#334155]">
+            <div className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155]">
               <InquiryStatus t={t} status={feasStatus} />
             </div>
           ) : (
@@ -1374,7 +1366,7 @@ export default function MacanGlobalPlatform() {
                   setFeasStatus,
                 );
               }}
-              className="bg-[#1E293B] p-8 rounded-xl border border-[#334155] space-y-6"
+              className="bg-[#1E293B] p-6 sm:p-8 rounded-xl border border-[#334155] space-y-6"
             >
               <SenderFields t={t} value={sender} onChange={setSender} />
               <div>
@@ -1428,7 +1420,7 @@ export default function MacanGlobalPlatform() {
       </section>
 
       {}
-      <footer className="bg-[#0A192F] border-t border-[#1E293B] py-16 text-slate-400 text-xs">
+      <footer className="bg-[#0A192F] border-t border-[#1E293B] py-12 sm:py-16 text-slate-400 text-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-2 space-y-4">
